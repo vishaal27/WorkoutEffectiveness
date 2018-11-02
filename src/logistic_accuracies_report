@@ -1,0 +1,4 @@
+Accuracy with newton-cg and multinomial: 0.6729173514627244
+Accuracy with newton-cg and ovr: 0.6606270994844989
+Accuracy with lib-linear and ovr: 0.6607233049794361
+Accuracy with lbfgs and ovr: 0.6606431337336551
