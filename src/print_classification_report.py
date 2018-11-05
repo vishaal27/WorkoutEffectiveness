@@ -1,10 +1,11 @@
 import numpy as np
 import pickle
 from sklearn import svm
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
 from sklearn.externals import joblib
-from sklearn.model_selection import GridSearchCV
 
 FILE_PUSHUPS=open('pushups.dat','rb')
 FILE_PULLUPS=open('pullups.dat', 'rb')
@@ -19,9 +20,7 @@ FILE_BOXINGPUNCHINGBAG=open('bodyboxingpunchingbag.dat', 'rb')
 
 LINEAR_SVM_MODEL="linear_svm_model.pickle"
 RBF_SVM_MODEL="rbf_svm_model.pickle"
-
-C_values=[0.1, 0.5, 1, 5, 10, 50, 100, 250, 500, 1000]
-gamma_values=[0.0005, 0.0001, 0.001, 0.005, 0.01, 0.05, 0.5, 0.1, 0.2, 0.3, 0.4, 1]
+LOGISTIC_MODEL="logistic_model.pickle"
 
 input_pushups=pickle.load(FILE_PUSHUPS)
 input_pullups=pickle.load(FILE_PULLUPS)
@@ -91,71 +90,31 @@ for i in range(len(input_boxingpunchingbag)):
 data_x=np.asarray(data_x).reshape((len(data_x), 28))
 
 training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.2, shuffle=True)
+target_classes=["Pushups", "Pullups", "Wallpushups", "Jumping jacks", "Jump rope", "Weight squats", "Boxing punching bag"]
 
+print("Classification Report for logistic with nm")
+# logistic_model=LogisticRegression(solver='newton-cg', multi_class='multinomial')
+# logistic_model.fit(training_x, training_y)
+logistic_model=joblib.load(LOGISTIC_MODEL)
+predicted_y=logistic_model.predict(test_x)
+print(classification_report(test_y, predicted_y, target_names=target_classes))
+print()
+print()
 
-svm_model=svm.SVC(kernel='linear', gamma='auto')
-grid_search_parameters={'C':C_values}
-grid_search=GridSearchCV(svm_model, grid_search_parameters, cv=5, scoring='accuracy', n_jobs=-1)
-grid_search.fit(training_x, training_y)
-return_dict=grid_search.best_params_
-best_C=return_dict['C']
-
-# svm_model=svm.SVC(kernel='linear', gamma='auto', C=0.1)
+print("Classification Report for linear svm with C=1000")
+# svm_model=svm.SVC(kernel='linear', gamma='auto', C=1000)
 # svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for linear with C=0.1:", accuracy_score(test_y, predicted_y))
-
-# svm_model=svm.SVC(kernel='linear', gamma='auto', C=1)
-# svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for linear with C=1:", accuracy_score(test_y, predicted_y))
-
-# svm_model=svm.SVC(kernel='linear', gamma='auto', C=10)
-# svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for linear with C=10:", accuracy_score(test_y, predicted_y))
-
-# svm_model=svm.SVC(kernel='linear', gamma='auto', C=100)
-# svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for linear with C=100:", accuracy_score(test_y, predicted_y))
-
-svm_model=svm.SVC(kernel='linear', gamma='auto', C=best_C)
-svm_model.fit(training_x, training_y)
-joblib.dump(svm_model, LINEAR_SVM_MODEL)
+svm_model=joblib.load(LINEAR_SVM_MODEL)
 predicted_y=svm_model.predict(test_x)
-print("Accuracy for linear with C="+str(best_C)+": "+str(accuracy_score(test_y, predicted_y)))
+print(classification_report(test_y, predicted_y, target_names=target_classes))
+print()
+print()
 
-svm_model=svm.SVC(kernel='rbf')
-grid_search_parameters={'C':C_values, 'gamma':gamma_values}
-grid_search=GridSearchCV(svm_model, grid_search_parameters, cv=5, scoring='accuracy', n_jobs=-1)
-grid_search.fit(training_x, training_y)
-return_dict=grid_search.best_params_
-best_C=return_dict['C']
-best_gamma=return_dict['gamma']
-
-# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=0.1)
+print("Classification Report for rbf svm with C=1000")
+# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1000)
 # svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for rbf with C=0.1:", accuracy_score(test_y, predicted_y))
-
-# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1)
-# svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for rbf with C=1:", accuracy_score(test_y, predicted_y))
-
-# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=10)
-# svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for rbf with C=10:", accuracy_score(test_y, predicted_y))
-
-# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=100)
-# svm_model.fit(training_x, training_y)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for rbf with C=100:", accuracy_score(test_y, predicted_y))
-
-svm_model=svm.SVC(kernel='rbf', gamma=best_gamma, C=best_C)
-svm_model.fit(training_x, training_y)
-joblib.dump(svm_model, RBF_SVM_MODEL)
+svm_model=joblib.load(RBF_SVM_MODEL)
 predicted_y=svm_model.predict(test_x)
-print("Accuracy for rbf with C="+str(best_C)+" and gamma="+str(best_gamma)+": "+str(accuracy_score(test_y, predicted_y)))
+print(classification_report(test_y, predicted_y, target_names=target_classes))
+print()
+print()

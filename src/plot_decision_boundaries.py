@@ -1,9 +1,13 @@
 import numpy as np
 import pickle
-from sklearn.linear_model import LogisticRegression
+from sklearn import svm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from sklearn.externals import joblib
+from mlxtend.plotting import plot_decision_regions
+from sklearn.manifold import TSNE
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.linear_model import LogisticRegression
+import matplotlib.pyplot as plt
 
 FILE_PUSHUPS=open('pushups.dat','rb')
 FILE_PULLUPS=open('pullups.dat', 'rb')
@@ -16,10 +20,8 @@ FILE_WEIGHTSQUATS=open('bodyweightsquats.dat', 'rb')
 FILE_BOXINGPUNCHINGBAG=open('bodyboxingpunchingbag.dat', 'rb')
 # FILE_HULAHOOP=open('bodyhulahoop.dat', 'rb')
 
-ALPHA_values=[1,0.1,0.01,0.001,0.0001,0]
-C_values=[0.01, 0.1, 1, 10, 100]
-penalty_values=['l1', 'l2']
-
+LINEAR_SVM_MODEL="linear_svm_model.pickle"
+RBF_SVM_MODEL="rbf_svm_model.pickle"
 LOGISTIC_MODEL="logistic_model.pickle"
 
 input_pushups=pickle.load(FILE_PUSHUPS)
@@ -91,32 +93,23 @@ data_x=np.asarray(data_x).reshape((len(data_x), 28))
 
 training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.2, shuffle=True)
 
-logistic_model=LogisticRegression()
-grid_search_parameters={'C':C_values, 'alpha':ALPHA_values, 'penalty':penalty_values}
-grid_search=GridSearchCV(svm_model, grid_search_parameters, cv=5, scoring='accuracy', n_jobs=-1)
-grid_search.fit(training_x, training_y)
-return_dict=grid_search.best_params_
-best_C=return_dict['C']
-best_alpha=return_dict['alpha']
-best_penalty=return_dict['penalty']
+output_features=TSNE(n_components=2).fit_transform(training_x)
+logistic_model=LogisticRegression(solver='newton-cg', multi_class='multinomial')
+logistic_model.fit(output_features, training_y)
+plot_decision_regions(output_features, np.asarray(training_y), clf=logistic_model, legend=2)
+plt.title("Decision boundaries for logistic with nm")
+plt.savefig('../plots/decision_boundary_logistic.png')
 
-logistic_model=LogisticRegression(C=best_C, alpha=best_alpha, penalty=best_penalty)
-logistic_model.fit(training_x, training_y)
-joblib.dump(logistic_model, LOGISTIC_MODEL)
-predicted_y=logistic_model.predict(test_x)
-print("Accuracy with cross validated logistic regression:", accuracy_score(test_y, predicted_y))
+output_features=TSNE(n_components=2).fit_transform(training_x)
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=1000)
+svm_model.fit(output_features, training_y)
+plot_decision_regions(output_features, np.asarray(training_y), clf=svm_model, legend=2)
+plt.title("Decision boundaries for linear svm with C=1000")
+plt.savefig('../plots/decision_boundary_svm_linear.png')
 
-# logistic_model=LogisticRegression(solver='newton-cg', multi_class='ovr')
-# logistic_model.fit(training_x, training_y)
-# predicted_y=logistic_model.predict(test_x)
-# print("Accuracy with newton-cg and ovr:", accuracy_score(test_y, predicted_y))
-
-# logistic_model=LogisticRegression(solver='liblinear', multi_class='ovr')
-# logistic_model.fit(training_x, training_y)
-# predicted_y=logistic_model.predict(test_x)
-# print("Accuracy with lib-linear and ovr:", accuracy_score(test_y, predicted_y))
-
-# logistic_model=LogisticRegression(solver='lbfgs', multi_class='ovr', max_iter=1000)
-# logistic_model.fit(training_x, training_y)
-# predicted_y=logistic_model.predict(test_x)
-# print("Accuracy with lbfgs and ovr:", accuracy_score(test_y, predicted_y))
+output_features=TSNE(n_components=2).fit_transform(training_x)
+svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1000)
+svm_model.fit(output_features, training_y)
+plot_decision_regions(output_features, np.asarray(training_y), clf=svm_model, legend=2)
+plt.title("Decision boundaries for rbf svm with C=1000")
+plt.savefig('../plots/decision_boundary_svm_rbf.png')
