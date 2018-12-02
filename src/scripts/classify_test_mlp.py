@@ -1,9 +1,10 @@
 import numpy as np
 import pickle
-from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.externals import joblib
+from sklearn.model_selection import GridSearchCV
 
 FILE_PATH='../pickle_files/'
 
@@ -14,15 +15,14 @@ FILE_JUMPINGJACK=open(FILE_PATH+'bodyjumpingjacks.dat', 'rb')
 # FILE_JUMPROPE=open(FILE_PATH+'bodyjumprope.dat', 'rb')
 # FILE_PARALLELBARS=open('bodyparallelbars.dat', 'rb')
 # FILE_UNEVENBARS=open('bodyunevenbars.dat', 'rb')
-FILE_WEIGHTSQUATS=open('bodyweightsquats.dat', 'rb')
+FILE_WEIGHTSQUATS=open(FILE_PATH+'bodyweightsquats.dat', 'rb')
 # FILE_BOXINGPUNCHINGBAG=open('bodyboxingpunchingbag.dat', 'rb')
 # FILE_HULAHOOP=open('bodyhulahoop.dat', 'rb')
 
-ALPHA_values=[1,0.1,0.01,0.001,0.0001,0]
-C_values=[0.01, 0.1, 1, 10, 100]
-penalty_values=['l1', 'l2']
+NN_MODEL="../saved_models/neural_net_model.pickle"
 
-LOGISTIC_MODEL="../saved_models/logistic_model.pickle"
+C_values=[0.1, 0.5, 1, 5, 10, 50, 100, 250, 500, 1000]
+gamma_values=[0.0005, 0.0001, 0.001, 0.005, 0.01, 0.05, 0.5, 0.1, 0.2, 0.3, 0.4, 1]
 
 input_pushups=pickle.load(FILE_PUSHUPS)
 input_pullups=pickle.load(FILE_PULLUPS)
@@ -83,7 +83,7 @@ for i in range(len(input_weightsquats)):
 
 # for i in range(len(input_boxingpunchingbag)):
 # 	data_x.append(input_boxingpunchingbag[i])
-	# data_y.append(8)
+# 	data_y.append(8)
 
 # for i in range(len(input_hulahoop)):
 # 	data_x.append(input_hulahoop[i])
@@ -93,33 +93,14 @@ data_x=np.asarray(data_x).reshape((len(data_x), 28))
 
 training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.2, shuffle=True)
 
-# logistic_model=LogisticRegression()
-# grid_search_parameters={'C':C_values, 'alpha':ALPHA_values, 'penalty':penalty_values}
-# grid_search=GridSearchCV(svm_model, grid_search_parameters, cv=5, scoring='accuracy', n_jobs=-1)
-# grid_search.fit(training_x, training_y)
-# return_dict=grid_search.best_params_
-# best_C=return_dict['C']
-# best_alpha=return_dict['alpha']
-# best_penalty=return_dict['penalty']
+neural_network_model=MLPClassifier(activation='logistic', hidden_layer_sizes=(100))
+neural_network_model.fit(training_x, training_y)
+joblib.dump(neural_network_model, NN_MODEL)
+predicted_y=neural_network_model.predict(test_x)
+print("Accuracy with logistic activation: "+str(accuracy_score(test_y, predicted_y)))
 
-# logistic_model=LogisticRegression(C=best_C, alpha=best_alpha, penalty=best_penalty)
-# logistic_model.fit(training_x, training_y)
-# joblib.dump(logistic_model, LOGISTIC_MODEL)
-# predicted_y=logistic_model.predict(test_x)
-# print("Accuracy with cross validated logistic regression:", accuracy_score(test_y, predicted_y))
-
-logistic_model=LogisticRegression(solver='newton-cg', multi_class='ovr')
-logistic_model.fit(training_x, training_y)
-joblib.dump(logistic_model, LOGISTIC_MODEL)
-predicted_y=logistic_model.predict(test_x)
-print("Accuracy with newton-cg and ovr:", accuracy_score(test_y, predicted_y))
-
-logistic_model=LogisticRegression(solver='liblinear', multi_class='ovr')
-logistic_model.fit(training_x, training_y)
-predicted_y=logistic_model.predict(test_x)
-print("Accuracy with lib-linear and ovr:", accuracy_score(test_y, predicted_y))
-
-logistic_model=LogisticRegression(solver='lbfgs', multi_class='ovr', max_iter=1000)
-logistic_model.fit(training_x, training_y)
-predicted_y=logistic_model.predict(test_x)
-print("Accuracy with lbfgs and ovr:", accuracy_score(test_y, predicted_y))
+neural_network_model=MLPClassifier(activation='relu', hidden_layer_sizes=(100))
+neural_network_model.fit(training_x, training_y)
+joblib.dump(neural_network_model, NN_MODEL)
+predicted_y=neural_network_model.predict(test_x)
+print("Accuracy with logistic activation: "+str(accuracy_score(test_y, predicted_y)))
