@@ -5,7 +5,7 @@ from pprint import pprint
 from sklearn.preprocessing import MinMaxScaler
 import pickle
 
-INPUT_FOLDER="../data/tdata/out_Pushups/"
+INPUT_FOLDER="../../data/tdata/out_Pushups/"
 INPUT_FRAMES=os.listdir(INPUT_FOLDER)
 
 features_input=[]
