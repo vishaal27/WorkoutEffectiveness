@@ -14,7 +14,7 @@ FILE_JUMPINGJACK=open(FILE_PATH+'bodyjumpingjacks.dat', 'rb')
 # FILE_JUMPROPE=open(FILE_PATH+'bodyjumprope.dat', 'rb')
 # FILE_PARALLELBARS=open('bodyparallelbars.dat', 'rb')
 # FILE_UNEVENBARS=open('bodyunevenbars.dat', 'rb')
-FILE_WEIGHTSQUATS=open('bodyweightsquats.dat', 'rb')
+FILE_WEIGHTSQUATS=open(FILE_PATH+'bodyweightsquats.dat', 'rb')
 # FILE_BOXINGPUNCHINGBAG=open('bodyboxingpunchingbag.dat', 'rb')
 # FILE_HULAHOOP=open('bodyhulahoop.dat', 'rb')
 

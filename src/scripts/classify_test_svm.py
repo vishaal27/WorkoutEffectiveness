@@ -108,18 +108,19 @@ training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_siz
 # return_dict=grid_search.best_params_
 # best_C=return_dict['C']
 
-svm_model=svm.SVC(kernel='linear', gamma='auto', C=0.1)
-svm_model.fit(training_x, training_y)
-predicted_y=svm_model.predict(test_x)
-print("Accuracy for linear with C=0.1:", accuracy_score(test_y, predicted_y))
+# svm_model=svm.SVC(kernel='linear', gamma='auto', C=0.1)
+# svm_model.fit(training_x, training_y)
+# predicted_y=svm_model.predict(test_x)
+# print("Accuracy for linear with C=0.1:", accuracy_score(test_y, predicted_y))
 
-svm_model=svm.SVC(kernel='linear', gamma='auto', C=1)
-svm_model.fit(training_x, training_y)
-predicted_y=svm_model.predict(test_x)
-print("Accuracy for linear with C=1:", accuracy_score(test_y, predicted_y))
+# svm_model=svm.SVC(kernel='linear', gamma='auto', C=1)
+# svm_model.fit(training_x, training_y)
+# predicted_y=svm_model.predict(test_x)
+# print("Accuracy for linear with C=1:", accuracy_score(test_y, predicted_y))
 
 svm_model=svm.SVC(kernel='linear', gamma='auto', C=10)
 svm_model.fit(training_x, training_y)
+# joblib.dump(svm_model, LINEAR_SVM_MODEL)
 predicted_y=svm_model.predict(test_x)
 print("Accuracy for linear with C=10:", accuracy_score(test_y, predicted_y))
 
@@ -134,11 +135,11 @@ joblib.dump(svm_model, LINEAR_SVM_MODEL)
 predicted_y=svm_model.predict(test_x)
 print("Accuracy for linear with C=1000:", accuracy_score(test_y, predicted_y))
 
-# svm_model=svm.SVC(kernel='linear', gamma='auto', C=best_C)
-# svm_model.fit(training_x, training_y)
-# joblib.dump(svm_model, LINEAR_SVM_MODEL)
-# predicted_y=svm_model.predict(test_x)
-# print("Accuracy for linear with C="+str(best_C)+": "+str(accuracy_score(test_y, predicted_y)))
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=best_C)
+svm_model.fit(training_x, training_y)
+joblib.dump(svm_model, LINEAR_SVM_MODEL)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for linear with C="+str(best_C)+": "+str(accuracy_score(test_y, predicted_y)))
 
 # svm_model=svm.SVC(kernel='rbf')
 # grid_search_parameters={'C':C_values, 'gamma':gamma_values}
