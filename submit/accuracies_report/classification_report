@@ -1,0 +1,50 @@
+Classification Report for logistic with nm:
+                     precision    recall  f1-score   support
+
+            Pushups       0.78      0.73      0.76      6775
+            Pullups       0.60      0.59      0.60     10997
+        Wallpushups       0.42      0.27      0.33     11503
+      Jumping jacks       0.65      0.33      0.44      8363
+          Jump rope       0.75      0.94      0.83     50596
+      Weight squats       0.63      0.27      0.38     11542
+Boxing punching bag       0.59      0.64      0.61     24957
+
+          micro avg       0.67      0.67      0.67    124733
+          macro avg       0.63      0.54      0.56    124733
+       weighted avg       0.66      0.67      0.65    124733
+
+
+
+Classification Report for linear svm with C=1000
+                     precision    recall  f1-score   support
+
+            Pushups       0.77      0.81      0.79      6775
+            Pullups       0.74      0.65      0.69     10997
+        Wallpushups       0.53      0.48      0.50     11503
+      Jumping jacks       0.73      0.38      0.50      8363
+          Jump rope       0.79      0.94      0.86     50596
+      Weight squats       0.69      0.34      0.45     11542
+Boxing punching bag       0.63      0.68      0.66     24957
+
+          micro avg       0.72      0.72      0.72    124733
+          macro avg       0.70      0.61      0.64    124733
+       weighted avg       0.71      0.72      0.71    124733
+
+
+
+Classification Report for rbf svm with C=1000
+                     precision    recall  f1-score   support
+
+            Pushups       0.94      0.93      0.93      6775
+            Pullups       0.90      0.89      0.90     10997
+        Wallpushups       0.94      0.91      0.92     11503
+      Jumping jacks       0.84      0.71      0.77      8363
+          Jump rope       0.91      0.97      0.94     50596
+      Weight squats       0.91      0.80      0.85     11542
+Boxing punching bag       0.90      0.89      0.89     24957
+
+          micro avg       0.91      0.91      0.91    124733
+          macro avg       0.90      0.87      0.89    124733
+       weighted avg       0.91      0.91      0.91    124733
+
+

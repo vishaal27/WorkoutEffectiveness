@@ -6,19 +6,21 @@ from sklearn.metrics import accuracy_score
 from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
 
-FILE_PUSHUPS=open('pushups.dat','rb')
-FILE_PULLUPS=open('pullups.dat', 'rb')
-FILE_WALLPUSHUPS=open('wallpushups.dat', 'rb')
-FILE_JUMPINGJACK=open('bodyjumpingjacks.dat', 'rb')
-FILE_JUMPROPE=open('bodyjumprope.dat', 'rb')
+FILE_PATH='../pickle_files/'
+
+FILE_PUSHUPS=open(FILE_PATH+'pushups.dat','rb')
+FILE_PULLUPS=open(FILE_PATH+'pullups.dat', 'rb')
+FILE_WALLPUSHUPS=open(FILE_PATH+'wallpushups.dat', 'rb')
+FILE_JUMPINGJACK=open(FILE_PATH+'bodyjumpingjacks.dat', 'rb')
+# FILE_JUMPROPE=open('bodyjumprope.dat', 'rb')
 # FILE_PARALLELBARS=open('bodyparallelbars.dat', 'rb')
 # FILE_UNEVENBARS=open('bodyunevenbars.dat', 'rb')
-# FILE_WEIGHTSQUATS=open('bodyweightsquats.dat', 'rb')
+FILE_WEIGHTSQUATS=open(FILE_PATH+'bodyweightsquats.dat', 'rb')
 # FILE_BOXINGPUNCHINGBAG=open('bodyboxingpunchingbag.dat', 'rb')
 # FILE_HULAHOOP=open('bodyhulahoop.dat', 'rb')
 
-LINEAR_SVM_MODEL="linear_svm_model.pickle"
-RBF_SVM_MODEL="rbf_svm_model.pickle"
+LINEAR_SVM_MODEL="../saved_models/linear_svm_model_mem.pickle"
+RBF_SVM_MODEL="../saved_models/rbf_svm_model_mem.pickle"
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import svm
@@ -43,22 +45,22 @@ gamma_values=[0.0005, 0.0001, 0.001, 0.005, 0.01, 0.05, 0.5, 0.1, 0.2, 0.3, 0.4,
 
 input_pushups=pickle.load(FILE_PUSHUPS)
 li=[]
-for i in range(0,len(input_pushups),20):
+for i in range(0,len(input_pushups),30):
 	l=[]
-	if(i+20>len(input_pushups)):
+	if(i+30>len(input_pushups)):
 		break
-	for j in range(i,i+min(20,len(input_pushups)-i)):
+	for j in range(i,i+min(30,len(input_pushups)-i)):
 		l.append(input_pushups[j])
 	li.append(l)
 input_pushups=li
 
 input_pullups=pickle.load(FILE_PULLUPS)
 lip=[]
-for i in range(0,len(input_pullups),20):
+for i in range(0,len(input_pullups),30):
 	l=[]
-	if(i+20>len(input_pullups)):
+	if(i+30>len(input_pullups)):
 		break
-	for j in range(i,i+min(20,len(input_pullups)-i)):
+	for j in range(i,i+min(30,len(input_pullups)-i)):
 		l.append(input_pullups[j])
 	lip.append(l)
 input_pullups=lip
@@ -66,55 +68,41 @@ input_pullups=lip
 
 input_wallpushups=pickle.load(FILE_WALLPUSHUPS)
 liwp=[]
-for i in range(0,len(input_wallpushups),20):
+for i in range(0,len(input_wallpushups),30):
 	l=[]
-	if(i+20>len(input_wallpushups)):
+	if(i+30>len(input_wallpushups)):
 		break
-	for j in range(i,i+min(20,len(input_wallpushups)-i)):
+	for j in range(i,i+min(30,len(input_wallpushups)-i)):
 		l.append(input_wallpushups[j])
 	liwp.append(l)
 input_wallpushups=liwp
 
 
-
-
-
-
 input_jumpingjack=pickle.load(FILE_JUMPINGJACK)
 lijj=[]
-for i in range(0,len(input_jumpingjack),20):
+for i in range(0,len(input_jumpingjack),30):
 	l=[]
-	if(i+20>len(input_jumpingjack)):
+	if(i+30>len(input_jumpingjack)):
 		break
-	for j in range(i,i+min(20,len(input_jumpingjack)-i)):
+	for j in range(i,i+min(30,len(input_jumpingjack)-i)):
 		l.append(input_jumpingjack[j])
 	lijj.append(l)
 input_jumpingjack=lijj
 
 
 
-
-
-
-
-
-
-input_jumprope=pickle.load(FILE_JUMPROPE)
+input_weightsquats=pickle.load(FILE_WEIGHTSQUATS)
 lijp=[]
-for i in range(0,len(input_jumprope),20):
+for i in range(0,len(input_weightsquats),30):
 	l=[]
-	if(i+20>len(input_jumprope)):
+	if(i+30>len(input_weightsquats)):
 		break
-	for j in range(i,i+min(20,len(input_jumprope)-i)):
-		l.append(input_jumprope[j])
+	for j in range(i,i+min(30,len(input_weightsquats)-i)):
+		l.append(input_weightsquats[j])
 	lijp.append(l)
-input_jumprope=lijp
+input_weightsquats=lijp
 
-print(len(input_pushups),len(input_pullups),len(input_wallpushups),len(input_jumpingjack),len(input_jumprope))
-
-
-
-
+print(len(input_pushups),len(input_pullups),len(input_wallpushups),len(input_jumpingjack),len(input_weightsquats))
 
 
 
@@ -128,10 +116,10 @@ input_pushups=np.asarray(input_pushups)
 input_pullups=np.asarray(input_pullups)
 input_wallpushups=np.asarray(input_wallpushups)
 input_jumpingjack=np.asarray(input_jumpingjack)
-input_jumprope=np.asarray(input_jumprope)
+# input_jumprope=np.asarray(input_jumprope)
 # input_parallelbars=np.asarray(input_parallelbars)
 # input_unevenbars=np.asarray(input_unevenbars)
-# input_weightsquats=np.asarray(input_weightsquats)
+input_weightsquats=np.asarray(input_weightsquats)
 # input_boxingpunchingbag=np.asarray(input_boxingpunchingbag)
 # input_hulahoop=np.asarray(input_hulahoop)
 
@@ -155,9 +143,9 @@ for i in range(len(input_jumpingjack)):
 	data_x.append(input_jumpingjack[i])
 	data_y.append(3)
 
-for i in range(len(input_jumprope)):
-	data_x.append(input_jumprope[i])
-	data_y.append(4)
+# for i in range(len(input_jumprope)):
+# 	data_x.append(input_jumprope[i])
+# 	data_y.append(4)
 
 # for i in range(len(input_parallelbars)):
 # 	data_x.append(input_parallelbars[i])
@@ -167,9 +155,9 @@ for i in range(len(input_jumprope)):
 # 	data_x.append(input_unevenbars[i])
 # 	data_y.append(6)
 
-# for i in range(len(input_weightsquats)):
-# 	data_x.append(input_weightsquats[i])
-# 	data_y.append(7)
+for i in range(len(input_weightsquats)):
+	data_x.append(input_weightsquats[i])
+	data_y.append(4)
 
 # for i in range(len(input_boxingpunchingbag)):
 # 	data_x.append(input_boxingpunchingbag[i])
@@ -179,10 +167,10 @@ for i in range(len(input_jumprope)):
 # 	data_x.append(input_hulahoop[i])
 # 	data_y.append(9)
 
-data_x=np.asarray(data_x).reshape((len(data_x), 28*20))
+data_x=np.asarray(data_x).reshape((len(data_x), 28*30))
 print(data_x.shape)
 
-training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.2, shuffle=True)
+training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.4, shuffle=True)
 
 
 # svm_model=svm.SVC(kernel='linear', gamma='auto')
@@ -199,6 +187,8 @@ svm_model.fit(training_x, training_y)
 predicted_y=svm_model.predict(test_x)
 print("Accuracy for linear with C=0.1:", accuracy_score(test_y, predicted_y))
 
+print(svm_model.coef_.shape)
+
 svm_model=svm.SVC(kernel='linear', gamma='auto', C=1)
 svm_model.fit(training_x, training_y)
 predicted_y=svm_model.predict(test_x)
@@ -211,6 +201,7 @@ print("Accuracy for linear with C=10:", accuracy_score(test_y, predicted_y))
 
 svm_model=svm.SVC(kernel='linear', gamma='auto', C=100)
 svm_model.fit(training_x, training_y)
+joblib.dump(svm_model, LINEAR_SVM_MODEL)
 predicted_y=svm_model.predict(test_x)
 print("Accuracy for linear with C=100:", accuracy_score(test_y, predicted_y))
 
@@ -246,6 +237,7 @@ print("Accuracy for rbf with C=1:", accuracy_score(test_y, predicted_y))
 
 svm_model=svm.SVC(kernel='rbf', gamma='auto', C=10)
 svm_model.fit(training_x, training_y)
+joblib.dump(svm_model, RBF_SVM_MODEL)
 predicted_y=svm_model.predict(test_x)
 print("Accuracy for rbf with C=10:", accuracy_score(test_y, predicted_y))
 

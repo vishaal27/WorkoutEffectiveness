@@ -93,14 +93,14 @@ data_x=np.asarray(data_x).reshape((len(data_x), 28))
 
 training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.2, shuffle=True)
 
-neural_network_model=MLPClassifier(activation='logistic', hidden_layer_sizes=(100))
+neural_network_model=MLPClassifier(activation='logistic', hidden_layer_sizes=(100), max_iter=750)
 neural_network_model.fit(training_x, training_y)
 joblib.dump(neural_network_model, NN_MODEL)
 predicted_y=neural_network_model.predict(test_x)
 print("Accuracy with logistic activation: "+str(accuracy_score(test_y, predicted_y)))
 
-neural_network_model=MLPClassifier(activation='relu', hidden_layer_sizes=(100))
+neural_network_model=MLPClassifier(activation='relu', hidden_layer_sizes=(100), max_iter=500)
 neural_network_model.fit(training_x, training_y)
 joblib.dump(neural_network_model, NN_MODEL)
 predicted_y=neural_network_model.predict(test_x)
-print("Accuracy with logistic activation: "+str(accuracy_score(test_y, predicted_y)))
+print("Accuracy with relu activation: "+str(accuracy_score(test_y, predicted_y)))

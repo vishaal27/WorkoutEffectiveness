@@ -1,10 +1,13 @@
 import numpy as np
 import pickle
 from sklearn import svm
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.externals import joblib
 from sklearn.model_selection import GridSearchCV
+import json
+from sklearn.preprocessing import MinMaxScaler
 
 FILE_PATH='../pickle_files/'
 
@@ -90,6 +93,9 @@ for i in range(len(input_weightsquats)):
 # 	data_x.append(input_hulahoop[i])
 # 	data_y.append(9)
 
+print(len(input_pushups),len(input_pullups),len(input_wallpushups),len(input_jumpingjack),len(input_weightsquats))
+
+print(np.asarray(data_x).shape)
 data_x=np.asarray(data_x).reshape((len(data_x), 28))
 
 training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_size=0.2, shuffle=True)
@@ -102,35 +108,31 @@ training_x, test_x, training_y, test_y=train_test_split(data_x, data_y, test_siz
 # return_dict=grid_search.best_params_
 # best_C=return_dict['C']
 
-print(test_x.shape)
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=0.1)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for linear with C=0.1:", accuracy_score(test_y, predicted_y))
 
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=1)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for linear with C=1:", accuracy_score(test_y, predicted_y))
 
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=10)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for linear with C=10:", accuracy_score(test_y, predicted_y))
 
-						# svm_model=svm.SVC(kernel='linear', gamma='auto', C=0.1)
-						# svm_model.fit(training_x, training_y)
-						# predicted_y=svm_model.predict(test_x)
-						# print("Accuracy for linear with C=0.1:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=100)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for linear with C=100:", accuracy_score(test_y, predicted_y))
 
-						# svm_model=svm.SVC(kernel='linear', gamma='auto', C=1)
-						# svm_model.fit(training_x, training_y)
-						# predicted_y=svm_model.predict(test_x)
-						# print("Accuracy for linear with C=1:", accuracy_score(test_y, predicted_y))
-
-						# svm_model=svm.SVC(kernel='linear', gamma='auto', C=10)
-						# svm_model.fit(training_x, training_y)
-						# predicted_y=svm_model.predict(test_x)
-						# print("Accuracy for linear with C=10:", accuracy_score(test_y, predicted_y))
-
-						# svm_model=svm.SVC(kernel='linear', gamma='auto', C=100)
-						# svm_model.fit(training_x, training_y)
-						# predicted_y=svm_model.predict(test_x)
-						# print("Accuracy for linear with C=100:", accuracy_score(test_y, predicted_y))
-
-						# svm_model=svm.SVC(kernel='linear', gamma='auto', C=1000)
-						# svm_model.fit(training_x, training_y)
-						# joblib.dump(svm_model, LINEAR_SVM_MODEL)
-						# predicted_y=svm_model.predict(test_x)
-						# print("Accuracy for linear with C=1000:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='linear', gamma='auto', C=1000)
+svm_model.fit(training_x, training_y)
+joblib.dump(svm_model, LINEAR_SVM_MODEL)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for linear with C=1000:", accuracy_score(test_y, predicted_y))
 
 # svm_model=svm.SVC(kernel='linear', gamma='auto', C=best_C)
 # svm_model.fit(training_x, training_y)
@@ -146,31 +148,31 @@ print(test_x.shape)
 # best_C=return_dict['C']
 # best_gamma=return_dict['gamma']
 
-							# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=0.1)
-							# svm_model.fit(training_x, training_y)
-							# predicted_y=svm_model.predict(test_x)
-							# print("Accuracy for rbf with C=0.1:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='rbf', gamma='auto', C=0.1)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for rbf with C=0.1:", accuracy_score(test_y, predicted_y))
 
-							# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1)
-							# svm_model.fit(training_x, training_y)
-							# predicted_y=svm_model.predict(test_x)
-							# print("Accuracy for rbf with C=1:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for rbf with C=1:", accuracy_score(test_y, predicted_y))
 
-							# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=10)
-							# svm_model.fit(training_x, training_y)
-							# predicted_y=svm_model.predict(test_x)
-							# print("Accuracy for rbf with C=10:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='rbf', gamma='auto', C=10)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for rbf with C=10:", accuracy_score(test_y, predicted_y))
 
-							# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=100)
-							# svm_model.fit(training_x, training_y)
-							# predicted_y=svm_model.predict(test_x)
-							# print("Accuracy for rbf with C=100:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='rbf', gamma='auto', C=100)
+svm_model.fit(training_x, training_y)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for rbf with C=100:", accuracy_score(test_y, predicted_y))
 
-							# svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1000)
-							# svm_model.fit(training_x, training_y)
-							# joblib.dump(svm_model, RBF_SVM_MODEL)
-							# predicted_y=svm_model.predict(test_x)
-							# print("Accuracy for rbf with C=1000:", accuracy_score(test_y, predicted_y))
+svm_model=svm.SVC(kernel='rbf', gamma='auto', C=1000)
+svm_model.fit(training_x, training_y)
+joblib.dump(svm_model, RBF_SVM_MODEL)
+predicted_y=svm_model.predict(test_x)
+print("Accuracy for rbf with C=1000:", accuracy_score(test_y, predicted_y))
 
 # svm_model=svm.SVC(kernel='rbf', gamma=best_gamma, C=best_C)
 # svm_model.fit(training_x, training_y)
